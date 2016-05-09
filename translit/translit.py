@@ -8,7 +8,7 @@ class Translit:
         self.bot = bot
         self.avail = transliterate.get_available_language_codes()
 
-    @commands.command(pass_context=True, no_pm=True)
+    @commands.command(pass_context=True)
     async def translit(self, ctx, target: str, *text: str):
         if target not in self.avail:
             await self.bot.reply("Unknown target language charset code. "
