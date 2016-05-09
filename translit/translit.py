@@ -16,6 +16,15 @@ class Translit:
         else:
             text = " ".join(text)
             await self.bot.reply(transliterate.translit(text, target))
+            
+    @commands.command(pass_context=True)
+    async def untranslit(self, ctx, target: str, *text: str):
+        if target not in self.avail:
+            await self.bot.reply("Unknown target language charset code. "
+                                 "Supported: {}".format(", ".join(self.avail)))
+        else:
+            text = " ".join(text)
+            await self.bot.reply(transliterate.translit(text, target, reversed=True))
 
 
 def setup(bot):
