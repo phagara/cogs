@@ -20,7 +20,7 @@ class ScriptBan:
                 'ru': {
                     'mode': 'whitelist',
                     'channels': ['russian'],
-                    'action': 'delete',
+                    'action': 'warn',
                 },
             },
             'warn': 'Language script `%s` is not allowed in this channel.',
