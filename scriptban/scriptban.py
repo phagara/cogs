@@ -23,7 +23,7 @@ class ScriptBan:
                     'action': 'warn',
                 },
             },
-            'warn': 'Language script `%s` is not allowed in this channel.',
+            'warn': 'Language script `{}` is not allowed in this channel.',
         }
 
     async def get_action(self, script, channel):
