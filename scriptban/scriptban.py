@@ -66,7 +66,8 @@ class ScriptBan:
         if action == 'keep':
             return
         elif action == 'warn':
-            await self.bot.reply(self.settings['warn'].format(script))
+            await self.bot.send_message(
+                message.channel, self.settings['warn'].format(script))
         elif action == 'delete':
             await self.bot.delete_message(message)
         else:
