@@ -57,6 +57,21 @@ class TypingTrigger:
         fileIO('data/typingtrigger/settings.json', 'save', self.settings)
         await self.bot.say('Trigger added.')
 
+    @trigger.command(pass_context=True, name='remove')
+    @checks.is_owner()
+    async def _trigger_remove(self, ctx, trigger: str):
+        '''
+        Removes an existing triggering text.
+        '''
+        try:
+            self.settings['triggers'].remove(trigger)
+        except ValueError:
+            await self.bot.say('No such trigger.')
+            return
+
+        fileIO('data/typingtrigger/settings.json', 'save', self.settings)
+        await self.bot.say('Trigger removed')
+
     @trigger.command(pass_context=True, name='threshold')
     @checks.is_owner()
     async def _trigger_threshold(self, ctx, threshold: int):
