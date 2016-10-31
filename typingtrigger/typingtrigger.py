@@ -59,7 +59,7 @@ class TypingTrigger:
 
     async def handle_typing(self, channel, user, when):
         if self.bagsofdicks.setdefault(channel.name, UnCache()).add(user.name) >= 3:
-            await self.bot.send_typing(message.channel)
+            await self.bot.send_typing(channel)
 
 
 def setup(bot):
