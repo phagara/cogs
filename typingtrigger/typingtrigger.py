@@ -44,7 +44,7 @@ class TypingTrigger:
         /triggered
         '''
         self.settings['triggers'] = list(
-            set(self.settings['triggers']).add(trigger))
+            set(self.settings['triggers']).union(set([trigger])))
         fileIO('data/typingtrigger/settings.json', 'save', self.settings)
         await self.bot.say('Trigger added.')
 
