@@ -14,6 +14,7 @@ log = logging.getLogger('red.TypingTrigger')
 class TypingTrigger:
     def __init__(self, bot):
         self.bot = bot
+        # TODO: store in a data file
         self.settings = {
             'triggers': [
                 '*typing*',
@@ -21,6 +22,8 @@ class TypingTrigger:
                 '/me typing',
             ],
         }
+
+    # TODO: command to add new triggers
 
     async def handle_message(self, message):
         if message.channel.is_private:
@@ -30,7 +33,6 @@ class TypingTrigger:
             # do not check bot's own messages
             return
         elif message.clean_content not in self.settings['triggers']:
-            log.info('non-triggering message: %s', message.clean_content)
             return
         else:
             await self.bot.send_typing(message.channel)
