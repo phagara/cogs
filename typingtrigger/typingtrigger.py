@@ -36,9 +36,18 @@ class TypingTrigger:
         self.settings = fileIO('data/typingtrigger/settings.json', 'load')
         self.bagsofdicks = {}
 
-    @commands.command(pass_context=True)
+    @commands.group(pass_context=True)
+    async def trigger(self, ctx):
+        '''
+        Configures this bot's typing notification triggers.
+        '''
+        if ctx.invoked_subcommand is None:
+            await send_cmd_help(ctx)
+            return
+
+    @trigger.command(pass_context=True, name='add')
     @checks.is_owner()
-    async def triggeradd(self, ctx, trigger: str):
+    async def _trigger_add(self, ctx, trigger: str):
         '''
         Adds a new triggering trigger for typing trigger notification trigger.
         /triggered
@@ -48,15 +57,25 @@ class TypingTrigger:
         fileIO('data/typingtrigger/settings.json', 'save', self.settings)
         await self.bot.say('Trigger added.')
 
-    @commands.command(pass_context=True)
+    @trigger.command(pass_context=True, name='threshold')
     @checks.is_owner()
-    async def triggerthreshold(self, ctx, threshold: int):
+    async def _trigger_threshold(self, ctx, threshold: int):
         '''
         Sets the typing notification threshold.
         '''
         self.settings['threshold'] = threshold
         fileIO('data/typingtrigger/settings.json', 'save', self.settings)
         await self.bot.say('Threshold modified.')
+
+    @trigger.command(pass_context=True, name='show')
+    async def _trigger_show(self, ctx):
+        '''
+        Shows a list ofconfigured typing notification triggers.
+        '''
+        await self.bot.say('Typing notification threshold: {}'.format(
+            self.settings['threshold']))
+        await self.bot.say('Configured trigger messages:\n\t{}'.format(
+            '\n\t'.join(self.settings['triggers'])))
 
     async def handle_message(self, message):
         if message.channel.is_private:
