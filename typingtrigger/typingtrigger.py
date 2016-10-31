@@ -33,17 +33,30 @@ class UnCache(object):
 class TypingTrigger:
     def __init__(self, bot):
         self.bot = bot
-        # TODO: store in a data file
-        self.settings = {
-            'triggers': [
-                '*typing*',
-                '**typing**',
-                '/me typing',
-            ],
-        }
+        self.settings = fileIO('data/typingtrigger/settings.json', 'load')
         self.bagsofdicks = {}
 
-    # TODO: command to add new triggers
+    @commands.command(pass_context=True)
+    @checks.is_owner()
+    async def triggeradd(self, ctx, trigger: str):
+        '''
+        Adds a new triggering trigger for typing trigger notification trigger.
+        /triggered
+        '''
+        self.settings['triggers'] = list(
+            set(self.settings['triggers']).append(trigger))
+        fileIO('data/typingtrigger/settings.json', 'save', self.settings)
+        await self.bot.say('Trigger added.')
+
+    @commands.command(pass_context=True)
+    @checks.is_owner()
+    async def triggerthreshold(self, ctx, threshold: int):
+        '''
+        Sets the typing notification threshold.
+        '''
+        self.settings['threshold'] = threshold
+        fileIO('data/typingtrigger/settings.json', 'save', self.settings)
+        await self.bot.say('Threshold modified.')
 
     async def handle_message(self, message):
         if message.channel.is_private:
@@ -58,11 +71,33 @@ class TypingTrigger:
             await self.bot.send_typing(message.channel)
 
     async def handle_typing(self, channel, user, when):
-        if self.bagsofdicks.setdefault(channel.name, UnCache()).add(user.name) >= 3:
+        if channel.is_private:
+            return
+        elif user.id == self.bot.user.id:
+            return
+
+        length = self.bagsofdicks.setdefault(
+            channel.name, UnCache()).add(user.name)
+
+        if length >= self.settings['threshold']:
             await self.bot.send_typing(channel)
 
 
+def check_folder():
+    if not os.path.exists('data/typingtrigger'):
+        os.makedirs('data/typingtrigger')
+
+
+def check_file():
+    if not fileIO('data/typingtrigger/settings.json', 'check'):
+        fileIO('data/typingtrigger/settings.json', 'save',
+               {'triggers': [],
+                'threshold': 3})
+
+
 def setup(bot):
+    check_folder()
+    check_file()
     typingtrigger = TypingTrigger(bot)
     bot.add_listener(typingtrigger.handle_message, 'on_message')
     bot.add_listener(typingtrigger.handle_typing, 'on_typing')
