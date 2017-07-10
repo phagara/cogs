@@ -102,7 +102,7 @@ class TypingTrigger:
         elif message.clean_content not in self.settings['triggers']:
             return
         else:
-            await self.bot.add_reaction(message, ':bigred:')
+            await self.bot.add_reaction(message, 'bigred:310829330735562752')
 
     async def handle_typing(self, channel, user, when):
         if channel.is_private:
