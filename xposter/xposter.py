@@ -19,7 +19,7 @@ class Xposter:
         if message.server is None or self.bot.user == message.author:
             return
 
-        if XPOST.match(message.content):
+        if XPOST.search(message.content):
             self.log.info("Detected XPOST: '%s'", message.content)
             for channel in message.channel_mentions:
                 await self.xpost(message, channel)
