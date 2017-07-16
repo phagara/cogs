@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+import logging
 import re
 
 XPOST = re.compile('x-?post #(?P<channel>\w+)', re.IGNORECASE)
@@ -8,6 +9,8 @@ XPOST = re.compile('x-?post #(?P<channel>\w+)', re.IGNORECASE)
 
 class Xposter:
     """Bot that detects x-posts and dispatches them to desired channels"""
+
+    log = logging.getLogger('red.Xposter')
 
     def __init__(self, bot):
         self.bot = bot
@@ -17,10 +20,11 @@ class Xposter:
             return
 
         if XPOST.match(message.content):
+            self.log.info("Detected XPOST: '%s'", message.content)
             for channel in message.channel_mentions:
-                self.xpost(message, channel)
+                await self.xpost(message, channel)
 
-    async def xpost(message, channel):
+    async def xpost(self, message, channel):
         content = "Detected x-post from @{} in {}: {}".format(
             message.author, message.channel, message.content)
         await self.bot.send_message(channel, content)
